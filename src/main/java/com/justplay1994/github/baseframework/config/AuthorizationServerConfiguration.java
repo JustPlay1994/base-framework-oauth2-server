@@ -1,11 +1,12 @@
 package com.justplay1994.github.baseframework.config;
 
 import com.justplay1994.github.baseframework.service.impl.AuthenticationServiceImpl;
+import com.justplay1994.github.baseframework.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -36,10 +37,14 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Autowired
     AuthenticationServiceImpl authenticationService;
 
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
+
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
         oauthServer.tokenKeyAccess("permitAll()")
-                .checkTokenAccess("isAuthenticated()");
+//                .checkTokenAccess("isAuthenticated()");
+                .checkTokenAccess("permitAll()");
     }
 
     @Override
@@ -55,7 +60,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.authenticationManager(authenticationManager);
+        endpoints.authenticationManager(authenticationManager).userDetailsService(userDetailsService);
+        endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET,HttpMethod.POST);
     }
 
 }
