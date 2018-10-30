@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
  * @Update_Description: huangzezhou 补充
  **/
 
-@Service
+@Service("authenticationService")
 public class AuthenticationServiceImpl implements AuthenticationProvider{
 
     @Autowired

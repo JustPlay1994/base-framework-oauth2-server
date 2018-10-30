@@ -12,6 +12,12 @@ spring:
     url: jdbc:oracle:thin:@10.192.19.163:1521/orcl
     username: ZHFTYJJCPT
 
+mybatis:
+#指向mapper的xml文件位置
+  mapper-locations: classpath:com.justplay1994.github.baseframework.dao.mapper/*Mapper.xml
+#指向实体类的位置
+  type-aliases-package: classpath:com.justplay1994.github.baseframework.dao.entity.*
+
 security:
   basic:
     enabled: true

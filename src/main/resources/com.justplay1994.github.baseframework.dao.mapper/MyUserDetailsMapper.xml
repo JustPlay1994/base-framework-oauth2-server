@@ -1,0 +1,24 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.justplay1994.github.baseframework.dao.MyUserDetailsDao">
+    <resultMap type="com.justplay1994.github.baseframework.dao.entity.MyUserDetailsEntity" id="user">
+        <id property="username" javaType="java.lang.String" column="username" jdbcType="VARCHAR"/>
+        <result property="password" javaType="java.lang.String" column="password" jdbcType="VARCHAR"/>
+        <result property="enabled" javaType="java.lang.Boolean" column="enabled" jdbcType="NUMERIC"/>
+        <result property="accountNonExpired" javaType="java.lang.Boolean" column="accountNonExpired" jdbcType="NUMERIC"/>
+        <result property="credentialsNonExpired" javaType="java.lang.Boolean" column="credentialsNonExpired" jdbcType="NUMERIC"/>
+        <collection property="authorities" ofType="com.justplay1994.github.baseframework.dao.entity.MyGrantedAuthorityEntity">
+            <result property="authority" javaType="java.lang.String" column="authority" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <select id="loadUserByUsername" parameterType="java.lang.String" resultMap="user">
+    <!--<select id="loadUserByUsername" parameterType="java.lang.String" resultType="com.justplay1994.github.baseframework.dao.entity.MyUserDetailsEntityEntity">-->
+        select users.*, authorities.authority FROM users
+        left outer join authorities ON users.username=authorities.username
+        WHERE users.username=#{username}
+    </select>
+
+</mapper>

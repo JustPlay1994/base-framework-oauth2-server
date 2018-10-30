@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import javax.sql.DataSource;
+
 /**
  * @Package: com.justplay1994.github.baseframework.config
  * @Project: base-framework
@@ -34,6 +36,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     AuthenticationServiceImpl authenticationService;
+
+    @Autowired
+    DataSource dataSource;
 
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {

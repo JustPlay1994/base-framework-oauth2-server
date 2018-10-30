@@ -1,6 +1,6 @@
 package com.justplay1994.github.baseframework.service.impl;
 
-import com.justplay1994.github.baseframework.dao.model.MyClientDetails;
+import com.justplay1994.github.baseframework.dao.entity.MyClientDetailsEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -26,7 +26,7 @@ import java.util.Set;
 public class ClientDetailsServiceImpl implements ClientDetailsService {
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
-        MyClientDetails clientDetails = null;
+        MyClientDetailsEntity clientDetails = null;
         if (clientId.equals("admin-oauth")) {
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("read");
             Set<GrantedAuthority> set = new HashSet<>();
@@ -35,7 +35,7 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
             authorizedGrantTypes.add("authorization_code");
             authorizedGrantTypes.add("refresh_token");
             authorizedGrantTypes.add("password");
-            clientDetails = new MyClientDetails("admin-oauth", "123-oauth", set, authorizedGrantTypes);
+            clientDetails = new MyClientDetailsEntity("admin-oauth", "123-oauth", set, authorizedGrantTypes);
         }else {
             throw new NoSuchClientException("clientId="+clientId);
         }

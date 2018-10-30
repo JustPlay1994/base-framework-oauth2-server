@@ -1,7 +1,8 @@
 package com.justplay1994.github.baseframework.service.impl;
 
-import com.justplay1994.github.baseframework.dao.model.MyUser;
-import org.springframework.security.core.GrantedAuthority;
+import com.justplay1994.github.baseframework.dao.MyUserDetailsDao;
+import com.justplay1994.github.baseframework.dao.entity.MyUserDetailsEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,14 +24,14 @@ import java.util.Set;
 @Service("userService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    @Autowired
+    MyUserDetailsDao userDetailsDao;
+
     @Override
-    public MyUser loadUserByUsername(String s) throws UsernameNotFoundException {
-        //post请求中的 username
-        String username = s;
-        if (!username.equals("admin"))
-            throw new UsernameNotFoundException("该用户不存在");
-        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("read");
-        Set<GrantedAuthority> set = new HashSet<>();
-        return new MyUser("admin","123",set);
+    public MyUserDetailsEntity loadUserByUsername(String username) throws UsernameNotFoundException {
+        MyUserDetailsEntity user = userDetailsDao.loadUserByUsername(username);
+        if (user == null)
+            throw new UsernameNotFoundException("username:"+username);
+        return user;
     }
 }
