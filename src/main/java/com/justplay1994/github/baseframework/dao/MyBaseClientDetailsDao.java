@@ -17,7 +17,7 @@ import org.springframework.security.oauth2.provider.client.BaseClientDetails;
  * @Update_Description: huangzezhou 补充
  **/
 @Mapper
-public interface BaseClientDetailsDao {
+public interface MyBaseClientDetailsDao {
 
     public MyBaseClientDetailsEntity loadClientByClientId(String clientId);
 

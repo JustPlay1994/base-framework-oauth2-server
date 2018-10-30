@@ -1,14 +1,12 @@
 package com.justplay1994.baseframework;
 
 import com.justplay1994.github.baseframework.Oauth2ServerApplication;
-import com.justplay1994.github.baseframework.dao.BaseClientDetailsDao;
+import com.justplay1994.github.baseframework.dao.MyBaseClientDetailsDao;
 import com.justplay1994.github.baseframework.dao.entity.MyBaseClientDetailsEntity;
-import com.justplay1994.github.baseframework.dao.entity.MyClientDetailsEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.sql.DataSource;
@@ -32,7 +30,7 @@ public class SpringOauthJdbcTest {
     DataSource dataSource;
 
     @Autowired
-    BaseClientDetailsDao baseClientDetailsDao;
+    MyBaseClientDetailsDao myBaseClientDetailsDao;
 
     @Test
     public void dataSourceTest() throws SQLException {
@@ -49,7 +47,7 @@ public class SpringOauthJdbcTest {
 
     @Test
     public void baseClientDetailsDaoTest(){
-        MyBaseClientDetailsEntity clientDetails = baseClientDetailsDao.loadClientByClientId("admin-oauth");
+        MyBaseClientDetailsEntity clientDetails = myBaseClientDetailsDao.loadClientByClientId("admin-oauth");
         System.out.println(clientDetails);
     }
 

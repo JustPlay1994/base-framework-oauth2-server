@@ -21,21 +21,21 @@ import java.util.*;
  **/
 public class MyBaseClientDetailsEntity implements ClientDetails {
 
-    private String clientId;
+    private String clientId;        //oauth client 编号
 
-    private String clientSecret;
+    private String clientSecret;    //oauth client 密码
 
-    private Set<String> scope = Collections.emptySet();
+    private Set<String> scope = Collections.emptySet(); //client授予user的权限。
 
-    private Set<String> resourceIds = Collections.emptySet();
+    private Set<String> resourceIds = Collections.emptySet();   //资源。
 
     private Set<String> authorizedGrantTypes = Collections.emptySet();
 
     private Set<String> registeredRedirectUris;
 
-    private Set<String> autoApproveScopes;
+    private Set<String> autoApproveScopes;      //自动审批的权限集合。
 
-    private List<GrantedAuthority> authorities = Collections.emptyList();
+    private List<GrantedAuthority> authorities = Collections.emptyList();   //server授予client的权限
 
     private Integer accessTokenValiditySeconds;
 
@@ -117,6 +117,11 @@ public class MyBaseClientDetailsEntity implements ClientDetails {
         this.autoApproveScopes = new HashSet<String>(autoApproveScopes);
     }
 
+    /**
+     * 自动审批权限，是否通过。审批通过返回true
+     * @param scope
+     * @return
+     */
     @Override
     public boolean isAutoApprove(String scope) {
         if (autoApproveScopes == null) {
@@ -146,6 +151,10 @@ public class MyBaseClientDetailsEntity implements ClientDetails {
         this.clientSecret = clientSecret;
     }
 
+    /**
+     * 判断是否被授予scope权限（判断scope是否为空或null）
+     * @return
+     */
     public boolean isScoped() {
         return this.scope != null && !this.scope.isEmpty();
     }

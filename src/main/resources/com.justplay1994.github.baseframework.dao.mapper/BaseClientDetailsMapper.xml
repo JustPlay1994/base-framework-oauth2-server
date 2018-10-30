@@ -2,7 +2,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.justplay1994.github.baseframework.dao.BaseClientDetailsDao">
+<mapper namespace="com.justplay1994.github.baseframework.dao.MyBaseClientDetailsDao">
 
     <resultMap id="client" type="com.justplay1994.github.baseframework.dao.entity.MyBaseClientDetailsEntity">
     <!--<resultMap id="client" type="org.springframework.security.oauth2.provider.client.BaseClientDetails">-->

@@ -17,5 +17,5 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface MyUserDetailsDao {
 
-    public MyUserDetailsEntity loadUserByUsername(@Param("username")String username);
+    public MyUserDetailsEntity loadUserByUsername(String username);
 }

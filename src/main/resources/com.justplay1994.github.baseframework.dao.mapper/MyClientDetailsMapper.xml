@@ -2,7 +2,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.justplay1994.github.baseframework.dao.MyUserDetailsDao">
+<mapper namespace="com.justplay1994.github.baseframework.dao.MyClientDetailsDao">
     <!--<resultMap type="com.justplay1994.github.baseframework.dao.entity.MyClientDetailsEntity" id="client">-->
         <!--<id property="clientId" javaType="java.lang.String" column="clientId" jdbcType="VARCHAR"/>-->
         <!--<result property="clientSecret" javaType="java.lang.String" column="clientSecret" jdbcType="VARCHAR"/>-->
