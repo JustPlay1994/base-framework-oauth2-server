@@ -24,7 +24,7 @@ public class JdbcClientDetailsServiceTest {
 
     @Test
     public void test(){
-
+        
     }
 
 }

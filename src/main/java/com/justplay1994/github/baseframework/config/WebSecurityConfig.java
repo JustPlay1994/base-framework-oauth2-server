@@ -54,41 +54,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/oauth/token").permitAll()
+                .antMatchers("/oauth/authorize").permitAll()
+                .antMatchers("/oauth/check_token").permitAll()
                 .anyRequest().authenticated()
-                .and()
-                .csrf().disable()//关闭csrf
+        .and()
+        .csrf().disable()//关闭csrf
 //                .formLogin()
 //                .loginPage("/login")
 //                .defaultSuccessUrl("/index")
 //                .permitAll()
                 .httpBasic()
-                .and()
+        .and()
                 .logout()
                 .permitAll();
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        //解决静态资源被拦截的问题
-        web.ignoring().antMatchers("/css/**");
+
         //swagger调试，开放权限
         web.ignoring().antMatchers("/swagger-ui.html");
         web.ignoring().antMatchers("/v2/api-docs");
         web.ignoring().antMatchers("/webjars/**");
         web.ignoring().antMatchers("/swagger-resources/**");
-
-        //自定义登录接口
-        web.ignoring().antMatchers("/tokenLogin");
-//        web.ignoring().antMatchers("/**");
-
-        //auth2接口
-//        web.ignoring().antMatchers("/oauth/authorize");     //授权
-//        web.ignoring().antMatchers("/oauth/token");         //令牌
-//        web.ignoring().antMatchers("/oauth/confirm_access");    //验证授权
-//        web.ignoring().antMatchers("/oauth/error");         //错误指向
-//        web.ignoring().antMatchers("/oauth/check_token");   //由资源服务器用于解码访问令牌
-//        web.ignoring().antMatchers("/oauth/token_key");     //果使用JWT令牌，则公开用于令牌验证的公钥
 
     }
 }
