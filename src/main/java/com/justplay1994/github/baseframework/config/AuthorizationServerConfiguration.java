@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
+import org.springframework.security.oauth2.config.annotation.builders.JdbcClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -18,6 +21,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -25,6 +29,7 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 import javax.sql.DataSource;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Package: com.justplay1994.github.baseframework.config
@@ -39,21 +44,34 @@ import java.util.Collection;
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
-    @Autowired
-    private AuthenticationManager authenticationManager;
+
+//    @Autowired
+//    @Qualifier("clientDetailsServiceImpl")
+//    private ClientDetailsServiceImpl clientDetailsService;
 
     @Autowired
-    @Qualifier("clientDetailsServiceImpl")
-    private ClientDetailsServiceImpl clientDetailsService;
+    AuthenticationServiceImpl authenticationService;    //oauth2 client，认证授权服务
 
     @Autowired
-    AuthenticationServiceImpl authenticationService;
+    UserDetailsServiceImpl userDetailsService;  //查找userDetail的服务
 
     @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    ClientDetailsService clientDetailsService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;    //配置管理类
+
+//    @Autowired
+//    TokenStore tokenStore;
 
     @Autowired
     DataSource dataSource;
+
+    @Autowired
+    TokenStore tokenStore;
+
+    @Autowired
+    DefaultTokenServices tokenServices;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
@@ -70,20 +88,54 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 //                    .authorizedGrantTypes("authorization_code", "refresh_token", "password")     // 该client允许的授权类型
 //                    .scopes("read", "write")                     // 允许的授权范围
 //                    .autoApprove(true);         //登录后绕过批准询问(/oauth/confirm_access)
-        clients.withClientDetails((ClientDetailsService) clientDetailsService);
-//        clients.jdbc(dataSource);
+//        clients.withClientDetails((ClientDetailsService) clientDetailsService);
+        clients.jdbc(dataSource);
     }
+
+
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.authenticationManager(authenticationManager).userDetailsService(userDetailsService);
-        endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
+//        endpoints.authenticationManager(authenticationManager).userDetailsService(userDetailsService);
+
 
 //        DefaultTokenServices tokenServices = new DefaultTokenServices();
 //        tokenServices.setTokenStore(new JdbcTokenStore(dataSource));
 //        endpoints.tokenServices(tokenServices);
-
 //        endpoints.authenticationManager(JdbcClientDetailsService)
+
+        endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
+        endpoints.authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService)
+                .tokenStore(tokenStore)
+                .setClientDetailsService(clientDetailsService);
+        //配置TokenServices参数
+        tokenServices.setTokenStore(endpoints.getTokenStore());
+        tokenServices.setSupportRefreshToken(true);
+        tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
+        tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
+        tokenServices.setAccessTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(1)); // 1天
+        endpoints.tokenServices(tokenServices);
+    }
+
+    @Bean
+    @Primary
+    public DefaultTokenServices tokenServices() {
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setSupportRefreshToken(true);
+        tokenServices.setTokenStore(tokenStore);
+        return tokenServices;
+    }
+
+    @Bean(name = "tokenSource")
+    public TokenStore tokenStore(){
+        return new JdbcTokenStore(dataSource);
+    }
+
+    @Bean
+    @Primary
+    public ClientDetailsService clientDetailsService(){
+        return new JdbcClientDetailsService(dataSource);
     }
 
 }

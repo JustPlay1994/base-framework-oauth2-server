@@ -29,3 +29,5 @@ security:
 logging:
   level:
     root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} -%-4r [%t] %-5level %logger{36} - %msg%n"

@@ -1,4 +1,7 @@
 
+drop table authorities;
+drop table users;
+
 /*=============== DDL ========================*/
 create table users(
 	username varchar2(50) not null primary key,
@@ -23,5 +26,9 @@ create unique index ix_auth_username on authorities (username,authority);
 
 comment on table authorities is '用户权限表';
 comment on column authorities.username is '用户名';
-comment on column authorities.authority is'拥有的权限名';
+comment on column authorities.authority is '拥有的权限名';
 
+-- ========== 测试data 
+INSERT INTO "USERS" VALUES ('admin', '123', 1, 1, 1);
+INSERT INTO AUTHORITIES values ('admin', 'read');
+INSERT INTO AUTHORITIES values ('admin', 'write');
